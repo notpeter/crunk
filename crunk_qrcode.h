@@ -10,6 +10,7 @@
 #define TARGET_EXTENSION 1
 #include "pd_api.h"
 #include "qrcodegen.h"
+#include "pixel.h"
 
 #define QRQ_LUA_NAME "crunk.qrcode"
 

@@ -23,9 +23,10 @@
 
 /* 2023-10-25 (Peter Tripp)
  * assert.h outputs errors to stderr, but Playdate doesn't have stderr/stdout.
- * Commenting this out makes assert() calls into NO-OPs.
+ * Instead define `assert(x)` to be a NO-OP (empty define).
  */
 //#include <assert.h>
+#define assert(x)
 
 #include <limits.h>
 #include <stdlib.h>
