@@ -3,6 +3,9 @@
 ---@class crunk
 crunk = crunk or {}
 
+---@class crunk.qrcode
+crunk.qrcode = crunk.qrcode or {}
+
 ---Quickly Create a QRCode
 ---@param text string
 ---@param ecc_level? integer Error correcting duplication. -1: auto; 0: 7%, 1: 15%, 2: 25%, 3: 30%
