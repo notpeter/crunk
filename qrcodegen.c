@@ -21,7 +21,12 @@
  *   Software.
  */
 
-#include <assert.h>
+/* 2023-10-25 (Peter Tripp)
+ * assert.h outputs errors to stderr, but Playdate doesn't have stderr/stdout.
+ * Commenting this out makes assert() calls into NO-OPs.
+ */
+//#include <assert.h>
+
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
