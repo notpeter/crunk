@@ -84,14 +84,18 @@ static const lua_reg qrqLib[] = {
     { "generate", qrq_lua_generate },
 };
 
-void registerQRQ(PlaydateAPI* playdate, const char* name) {
+void registerQRQ(PlaydateAPI* playdate) {
     pd = playdate;
     const char* err;
     int ok = 0;
 	// See: https://devforum.play.date/t/playdate-lua-registerclass-lua-val-crashes-on-device/13899
     // TODO: Restore once we figure out why this is broken on-device.
     // ok = pd->lua->registerClass(name, qrqLib, qrqConst, 1, &err);
-    ok = pd->lua->registerClass(name, qrqLib, NULL, 1, &err);
+    ok = pd->lua->registerClass("crunk", NULL, NULL, 1, &err);
+    if ( !ok )
+        pd->system->logToConsole("%s:%i: registerClass failed, %s", __FILE__, __LINE__, err);
+
+    ok = pd->lua->registerClass("crunk.qrcode", qrqLib, NULL, 1, &err);
     if ( !ok )
         pd->system->logToConsole("%s:%i: registerClass failed, %s", __FILE__, __LINE__, err);
 }

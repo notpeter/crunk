@@ -22,5 +22,5 @@ typedef uint8_t qrcode_buf[qrcodegen_BUFFER_LEN_MAX];
 static bool qrq_generate(char* text, uint8_t qrcode[]);
 
 int qrq_generate_image(PlaydateAPI* pd, char *text, LCDBitmap **bitmap);
-void registerQRQ(PlaydateAPI* playdate, const char* name);
+void registerQRQ(PlaydateAPI* playdate);
 void logQr(PlaydateAPI* pd, const uint8_t qrcode[]);
