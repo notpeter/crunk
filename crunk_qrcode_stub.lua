@@ -10,4 +10,4 @@ crunk = crunk or {}
 ---@param min_version? integer Minimum QRCode version (size). 1-40 (default: 1)
 ---@param max_version? integer Maximum QRCode version (size). 1-40 (default: 40)
 ---@return _Image? image The generated QRCode as an image (playdate.graphics.image)
-function crunk.qrcode(text, ecc_level, mask, min_version, max_version) end
+function crunk.qrcode.generate(text, ecc_level, mask, min_version, max_version) end
