@@ -1,0 +1,5 @@
+name=QuickQR
+author=Peter Tripp
+description=Quick QR Code Generation
+bundleID=net.notpeter.quickqr
+imagePath=
