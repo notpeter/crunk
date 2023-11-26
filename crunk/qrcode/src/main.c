@@ -1,7 +1,6 @@
-//
-//  main.c
-// Playdate C Template
-//
+// Copyright 2023 Peter Tripp
+// https://github.com/notpeter/crunk
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
