@@ -1,6 +1,7 @@
-import "CoreLibs/graphics"
+-- Copyright 2023 Peter Tripp
+-- https://github.com/notpeter/crunk
 
-local qrcode_generate = crunk.qrcode.generate
+import "CoreLibs/graphics"
 
 local function update()
 end
@@ -8,12 +9,12 @@ end
 local function setup()
     local text = "https://news.ycombinator.com/item?id=19986106"
     local before = playdate.getCurrentTimeMilliseconds()
-    local image = qrcode_generate(text)
-    local after = playdate.getCurrentTimeMilliseconds() - before
+    local image = crunk.qrcode.generate(text)
+    local elapsed = playdate.getCurrentTimeMilliseconds() - before
     if image == nil then
         error("Failed to generate QRCode")
     end
-    print("Generated QRCode in " .. after .. "ms")
+    print("Generated QRCode in " .. elapsed .. "ms")
     image:drawScaled(20, 20, 4, 4)
     playdate.update = update
 end

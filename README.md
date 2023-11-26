@@ -14,7 +14,7 @@ project and away you go.
 - [crunk.qrcode](crunk/qrcode) - Fast QR Code generation
     - `crunk.qrcode.generate(text)`
     - `crunk.qrcode.generate(text, ecc_level, mask, min_version, max_version)`
-- [crunk.pixel](crunk/crunk_pixel.h) -
+- [crunk.pixel](crunk/pixel/crunk_pixel.h) -
 C macros for working with individual Playdate LCDImage pixels.
 - [crunk.format.image](crunk/format/image) - Convert Playdate images to text for debugging.
 
