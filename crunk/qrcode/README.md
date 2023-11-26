@@ -54,6 +54,14 @@ image:drawScaled(20, 20, 4, 4)
 3. See [`library/stub.lua`](https://github/notpeter/crunk/library/stub.lua)
 for documentation of all optional function parameters.
 
+## Giving Thanks
+
+If you find this software useful, please consider:
+
+1. [Sponsoring me on GitHub](https://github.com/sponsors/notpeter/)
+2. [Purchasing something from my Itch Store](https://notpeter.itch.io)
+3. Sending me free copies of your Playdate apps using Crunk.
+
 ## License
 
 ```

@@ -18,6 +18,14 @@ project and away you go.
 C macros for working with individual Playdate LCDImage pixels.
 - [crunk.format.image](crunk/format/image) - Convert Playdate images to text for debugging.
 
+## Giving Thanks
+
+If you find this software useful, please consider:
+
+1. [Sponsoring me on GitHub](https://github.com/sponsors/notpeter/)
+2. [Purchasing something from my Itch Store](https://notpeter.itch.io)
+3. Sending me free copies of your Playdate apps using Crunk.
+
 ## Types
 
 Wherever possible we include LuaCATS types for use with the
