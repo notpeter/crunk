@@ -100,7 +100,7 @@ SOFTWARE.
 - changes: Add `#define assert` no-op.
 
 ### [C macros for working with Playdate bitmap data](https://devforum.play.date/t/c-macros-for-working-with-playdate-bitmap-data/7706)
-- files: [crunk_qrcode.h](src/crunk_qrcode.h) `crunk_setpixel` macro
+- files: [crunk_qrcode.h](src/crunk_qrcode.h) `setpixel` macro
 - author: [Dustin Mierau](https://github.com/mierau)
 - license: unknown
 - updated: 2022-07-22

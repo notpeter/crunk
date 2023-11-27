@@ -32,9 +32,10 @@ Pure Lua:
     - `crunk.ds.set` -
 
 Pure C:
-- [crunk/pixel](crunk/pixel/pixel.h) -
+- [crunk/pixel](crunk/pd_pixel/pd_pixel.h) -
 C macros for working with individual Playdate LCDImage pixels.
-
+- [crunk/print](crunk/print) -
+C macros for printing and logging to console (pd_print, pd_error, pd_debug)
 
 ## Giving Thanks
 
@@ -78,4 +79,4 @@ See [LICENSE](LICENSE) for full terms.
 ## 3rd Party Licenses
 
 - [qrcodegen](crunk/qrcode/LICENSE) (MIT) - Copyright Project Nayuki
-- [pixel.h](crunk/pixel/pixel.h) (Unknown) - Copyright Dustin Mierau
+- [pd_pixel.h](crunk/pd_pixel/pd_pixel.h) (Unknown) - Copyright Dustin Mierau

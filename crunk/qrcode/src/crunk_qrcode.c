@@ -79,7 +79,7 @@ int qrq_lua_generate(lua_State* L) {
 	for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
 			if (qrcodegen_getModule(outBuffer, x, y)) {
-				crunk_setpixel(data, x + border, y + border, rowbytes);
+				setpixel(data, x + border, y + border, rowbytes);
 			}
         }
     }
