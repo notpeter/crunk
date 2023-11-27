@@ -9,11 +9,6 @@ indent_style = space
 indent_size = 4
 charset = utf-8
 
-# This matches upstream style
-[*.c]
-trim_trailing_whitespace = false
-indent_style = tab
-
 # Tab indentation
 [Makefile]
 indent_style = tab

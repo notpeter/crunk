@@ -8,38 +8,38 @@
 #include "qrcodegen.h"
 #include "crunk_qrcode.h"
 
-LCDBitmap *bitmap = NULL;
-
-static bool qr_done = false;
-
 #ifdef _WINDLL
 __declspec(dllexport)
 #endif
 
-int eventHandler(PlaydateAPI* pd, PDSystemEvent event, uint32_t arg) {
+PlaydateAPI* pd = NULL;
+
+
+int eventHandler(PlaydateAPI* playdate, PDSystemEvent event, uint32_t arg) {
     (void)arg; // arg is currently only used for event = kEventKeyPressed
     switch (event) {
         case kEventInit:
             break;
         case kEventInitLua:
-			crunk_qrcode_register(pd, "crunk.qrcode.generate");
+            pd = playdate;
+            crunk_qrcode_register(playdate, "crunk.qrcode.generate");
             break;
         case kEventLock:
-			break;
+            break;
         case kEventUnlock:
-			break;
+            break;
         case kEventLowPower:
-			break;
+            break;
         case kEventPause:
-			break;
+            break;
         case kEventResume:
-			break;
+            break;
         case kEventTerminate:
-			break;
+            break;
         case kEventKeyPressed:
-			break;
+            break;
         case kEventKeyReleased:
-			break;
+            break;
     }
     return 0;
 }

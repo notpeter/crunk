@@ -14,8 +14,7 @@
 static uint8_t tempBuffer[qrcodegen_BUFFER_LEN_MAX];
 static uint8_t outBuffer[qrcodegen_BUFFER_LEN_MAX];
 
-// Global reference to PlaydateAPI. Set by crunk_qrcode_register().
-static PlaydateAPI* pd = NULL;
+extern PlaydateAPI* pd;
 
 /** Check the arguments for qrq.generate()
  * @param text char* Text to encode
@@ -93,10 +92,10 @@ int qrq_lua_generate(lua_State* L) {
 }
 
 void crunk_qrcode_register(PlaydateAPI* playdate, const char* name) {
-    pd = playdate;
     const char* err;
-    int ok = 0;
-	ok = pd->lua->addFunction(qrq_lua_generate, name, &err);
-    if ( !ok )
-        pd->system->logToConsole("%s:%i: registerFunction '%s' failed, %s", __FILE__, __LINE__, name, err);
+    int ok;
+    ok = playdate->lua->addFunction(qrq_lua_generate, name, &err);
+    if ( !ok ) {
+        playdate->system->logToConsole("%s:%i: registerFunction '%s' failed, %s", __FILE__, __LINE__, name, err);
+    }
 }
