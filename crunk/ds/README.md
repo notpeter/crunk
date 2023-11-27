@@ -4,14 +4,22 @@ Part of [Crunk](https://github.com/notpeter/crunk)
 
 ## Simple Datastructures
 
+[queue.lua](queue.lua)
 - crunk.ds.queue() Queue datastructure (insert, delete, empty, len)
 - crunk.ds.deque() Deque datastructure (push_front, push_back, pop_front, pop_back, empty, len)
 - crunk.ds.stack() Stack datastructure (push, pop, empty, len)
-- crunk.ds.circular(size) Circular ring buffer of a fixed size (push, pop)
+- crunk.ds.circular(size) Circular queue of a fixed size (push, pop)
+
+[set.lua](set.lua)
+- crunk.ds.set.new() Set datastructure
+(push, pop, clear, copy, union, intersection, difference, symmetric_difference,
+issubset, issuperset, isdisjoint, intersection_update, difference_update, union_update
+and various operators: `+`, `-`, `==`, `&`, `|`, `~`)
 
 ## Usage
 
-Copy [queue.lua](queue.lua) into your project, import and use.
+Copy the file you need into your project, import and use:
+
 
 If you only need one of the datastructures,
 you can easily delete everything you don't need or just
