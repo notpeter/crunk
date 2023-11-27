@@ -7,16 +7,34 @@ libraries to assist in Playdate app development.
 It is designed to be simple and modular.
 
 Just take the Lua and/or C files, drop them into your
-project and away you go.
+project and away you go. If you only need one function
+just copy/paste and away you go
+(but don't forget to retain the Copyright and License).
 
 ## Components:
 
-- [crunk.qrcode](crunk/qrcode) - Fast QR Code generation
+Mixed C/Lua:
+- [crunk/qrcode](crunk/qrcode) - Fast QR Code generation
     - `crunk.qrcode.generate(text)`
     - `crunk.qrcode.generate(text, ecc_level, mask, min_version, max_version)`
-- [crunk.pixel](crunk/pixel/crunk_pixel.h) -
+
+Pure Lua:
+- [crunk/image_format](crunk/image_format) - Convert Playdate images to text for debugging.
+    - `crunk.image.format_ascii`
+    - `crunk.image.format_color`
+    - `crunk.image.format_blocks`
+- [crunk/ds/queue](crunk/ds/queue) - Simple queue-like data structures for Lua
+    - `crunk.ds.queue` - Queue
+    - `crunk.ds.deque` - Deque (Double Ended Queue)
+    - `crunk.ds.stack` - Stack
+    - `crunk.ds.circular` - Circular Queue
+- [crunk/ds/set](crunk/ds/set) - Simple set data structure for Lua
+    - `crunk.ds.set` -
+
+Pure C:
+- [crunk/pixel](crunk/pixel/pixel.h) -
 C macros for working with individual Playdate LCDImage pixels.
-- [crunk.format.image](crunk/format/image) - Convert Playdate images to text for debugging.
+
 
 ## Giving Thanks
 
@@ -51,7 +69,13 @@ Or do the same via `.vscode/settings.json`
 
 ## License
 
-Each subdirectory includes specific copyright information
-and license terms.
+MIT License
 
-Most of it is MIT licensed.
+Copyright 2023 Peter Tripp
+
+See [LICENSE](LICENSE) for full terms.
+
+## 3rd Party Licenses
+
+- [qrcodegen](crunk/qrcode/LICENSE) (MIT) - Copyright Project Nayuki
+- [pixel.h](crunk/pixel/pixel.h) (Unknown) - Copyright Dustin Mierau
