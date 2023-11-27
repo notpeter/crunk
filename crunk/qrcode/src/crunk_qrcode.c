@@ -1,4 +1,4 @@
-// Copyright 2023 Peter Tripp
+// Copyright 2023 Peter Tripp (GitHub: @notpeter)
 // https://github.com/notpeter/crunk
 
 #include "crunk_qrcode.h"
@@ -37,10 +37,6 @@ static char* check_new_args(const char* text, int ecl, int mask, int minVersion,
         return "crunk_qrcode: Invalid argument value for min_ver/max_ver.";
     if (boostEcl < 0 || boostEcl > 1)
         return "crunk_qrcode: Invalid argument value for boostEcl";
-    crunk_debug(
-        "DEBUG: qrq_lua_generate(text=\"%s\", ecl=%d, mask=%d, minVersion=%d, maxVersion=%d, boostEcl=%d)",
-        text, ecl, mask, minVersion, maxVersion, boostEcl
-    );
     return "";
 }
 
@@ -81,7 +77,6 @@ int qrq_lua_generate(lua_State* L) {
     // This allocates a new bitmap. When we return, Lua is responsible for freeing/GC (I think).
 	LCDBitmap* bitmap = pd->graphics->newBitmap(image_size, image_size, kColorWhite);
     pd->graphics->getBitmapData(bitmap, &width, &height, &rowbytes, NULL, &data);
-    crunk_debug("bitmap(width=%d, height=%d, rowbytes=%d", width, height, rowbytes);
 	for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
 			if (qrcodegen_getModule(outBuffer, x, y)) {

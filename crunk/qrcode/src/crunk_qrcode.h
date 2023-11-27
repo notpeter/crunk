@@ -1,4 +1,5 @@
 // Copyright 2023 Peter Tripp
+// Copyright 2022 Dustin Mierau
 // https://github.com/notpeter/crunk
 
 #pragma once
@@ -6,23 +7,11 @@
 #define TARGET_EXTENSION 1
 #include "pd_api.h"
 
-#ifndef CRUNK_DEBUG
-#define CRUNK_DEBUG 0
-#endif
-
-// Converts QRCode Version (1-40) to Modules (e.g. version 40 is 177x177)
-
 /** Converts QRCode Version (1-40) to number of modules in QR code.
  * @param v int QRCode Version (1-40)
  * @return int QRCode Modules (e.g. version 40 is 177x177)
 */
 #define version_to_modules(v) (17 + v * 4)
-
-/** Log to console if CRUNK_DEBUG is set.
- * @param fmt const char* Format string
- * @param ... Arguments
- */
-#define crunk_debug(fmt, ...) do { if (CRUNK_DEBUG) pd->system->logToConsole(fmt, __VA_ARGS__); } while (0)
 
 /** Set the pixel at x, y to the specified color.
  * @param data uint8_t from PDLCDBitmap struct
