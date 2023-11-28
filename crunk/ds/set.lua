@@ -1,10 +1,20 @@
 -- Copyright 2023 Peter Tripp
 -- https://github.com/notpeter/crunk
 --
--- Simple sets in pure Lua for the Playdate
+-- Simple sets in pure Lua for the Playdate modeled after Python's set
 
-local set_new -- forward declaration
-local set_meta
+local set_meta -- forward declaration
+
+---Create a new set
+---@param tbl? table<any, any> Table whose keys will be used to initialize the set
+---@return _Set
+local function set_new(tbl)
+    local set = {}
+    for _, v in pairs(tbl or {}) do
+        set[v] = true
+    end
+    return setmetatable(set, set_meta)
+end
 
 ---Union of two sets
 ---@param a _Set
@@ -188,18 +198,6 @@ local function set_tostring(set)
         tbl[#tbl + 1] = tostring(e)
     end
     return "{" .. table.concat(tbl, ", ") .. "}"
-end
-
----Create a new set
----@param tbl table
----@return _Set
-set_new = function(tbl)
-    tbl = tbl or {}
-    local set = {}
-    for _, v in pairs(tbl) do
-        set[v] = true
-    end
-    return setmetatable(set, set_meta)
 end
 
 ---@class _Set: table<any, boolean>
