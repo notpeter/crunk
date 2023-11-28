@@ -5,88 +5,125 @@
 crunk/ds/queue.lua: Minimal queue datastructures for in pure Lua.
 license: MIT
 
-These are simple queue data structures atop Lua tables.
-They are intentionally lightweight with minimal complexity OOP objects.
+These are simple queue data structures atop Lua tables:
+    * Queue (Single Ended Queue) - FIFO queue, growable with no limit on size
+    * Deque (Double Ended Queue)
+    * Stack - LIFO queue
 
-Every object is a Lua table (no metatables) using numeric indexes (1+) for
-    values referenced, three or four integers (first, last, data, [size])
-    necessary for implementing the data structure and a few function references
-    which take the instance as the first argument for the functional interface.
+Every object is a Lua table using numeric indexes (1+) for values referenced,
+    with queue state tracked a sliding window of indexes:
+    * first - the index of the first element in the queue
+    * last - the index of the last element in the queue
+    Whenever you push an element onto the queue, `last` is incremented.
+    Whenever you pop an element from the queue, `first` is incremented.
+    As a result, `first`/`last` will monotonoically increase with each operation.
 
-The Queue/Deque structures will cease operation (always returning nil) if the indexes
-    overflow.  On 64bit Lua this is after at least 2^63 operations (~9 quintillion)
-    while on 32bit Lua this occurs after at least 2^31 operations (~2 billion).
-    Stack, and CircularQueue do not have this limitation.
-    This saves us a bounds check on every operation at the expense of breaking
-    if you use the datastructure for a really long time. On 64bit you will never
-    reach this, and on 32bit it's extremely unlikely (60 ops/sec for a year).
+These structures **MAY** be used to store nil values, but some care must be
+    taken in practice. Normally pop() / pop_front() / pop_back() only
+    return nil when the structure is empty.  When pushing/queueing nil values
+    you will need to explicitly check the length of the structure (#queue).
 
-These structures **MAY** be used to store nil values, but it is generally poor
-    practice to do so since behavior changes when nil values are stored:
-    1. Normally pop() / pop_front() / pop_back() only return nil if called
-        on an empty structure, but they will return nil if nil was stored.
-    2. circular.len() returns the count of non-nil members, not the
-        number of members in the table.
+When these indexes overflow Queue/Deque structures always returning nil.
+    On 64bit Lua this is after 2^63 operations (~9 quintillion)
+    But will never happen in practice (2B ops/sec for 100 years)
 
-The implementation could be altered if your use-cases has different tradeoffs:
-    * Use metatable for functioon references shared across all instances.
-      Lower memory usage with large number of queues (slower calls)
-    * Create one-off functional closures memoizing the instance specific self reference.
-      More memory overhead per-queue (faster calls)
-    * Add explicit bounds check on push so indexes don't overflow and a bad-case to rebuild
-      the table before the indexes overflow. (slower calls, no overflow)
+    On 32bit Lua this occurs after 2^31 operations (~2 billion).
+    Which is possible, but unlikely in a Playdate game (60 ops/sec for 1 year)
+
+    If this concerns you, changes you could:
+    * Add bounds check so indexes don't overflow and rebalance the table first.
     * Switch indexes from [1, math.maxinteger] to [math.mininteger + 1, math.maxinteger]
-      Support 2X queue operations before overflow, but indexes start negative.
-      (no performance impact, triviall worse ergonomics)
+        This would support 2X queue operations before overflow, but indexes start negative.
 
-In the future, when LuaLS generics are available we should be able to provide
-    generically typed datastructures (e.g. Queue<string>, Queue<integer>, etc.)
-    For now if you want this, duplicate this file and replace `any` with the
-    types you're using.
+In the future, with LuaLS generics it should be possible to provide typed datastructures
+    like (e.g. Queue<string>, Queue<integer>, etc.). In the meantime, create your own
+    LuaCATS typed datastructures with inheritance and changing `any` to `string`:
 
+    ```
+    ---QueueString
+    ---@class _QueueString: _Queue
+    ---@field enqueue       fun(self:_QueueString, val:string):integer
+    ---@field dequeue       fun(self:_QueueString):string
+
+    local q = crunk.ds.queue.new() ---@type _QueueString
+    ```
 --]]--------------------------------------------------------------------------
 
 --- Abstract Base Class for Queues
----@class _ABCQueue
+---@class _ABCQueue: table<(integer|string), any>
 ---@field first         integer
 ---@field last          integer
----@field data          table<integer, any>
 ---@field empty         fun(self:_ABCQueue):nil
+---@field __len         fun(self:_ABCQueue):integer
+---@field __tostring    fun(self:_ABCQueue):string
 
 --- Queue (Single Ended Queue)
 ---@class _Queue: _ABCQueue
+---@field new           fun():_Queue
 ---@field enqueue       fun(self:_Queue, val:any):integer
 ---@field dequeue       fun(self:_Queue):any
----@field len           fun(self:_Queue):integer
+---@field empty         fun(self:_Queue):nil
+---@field __len         fun(self:_Queue):integer
+---@field __tostring    fun(self:_Queue):string
+local queue_meta -- forward declaration
 
 --- Deque (Double Ended Queue)
 ---@class _Deque: _ABCQueue
+---@field new           fun():_Deque
 ---@field push_front    fun(self:_Deque, val:any):integer
 ---@field push_back     fun(self:_Deque, val:any):integer
 ---@field pop_front     fun(self:_Deque):any
 ---@field pop_back      fun(self:_Deque):any
----@field len           fun(self:_Deque):integer
+---@field empty         fun(self:_Deque):nil
+---@field __len         fun(self:_Deque):integer
+---@field __tostring    fun(self:_Deque):string
+local deque_meta -- forward declaration
 
 --- Stack
 ---@class _Stack: _ABCQueue (note: .first is always 1)
+---@field new           fun():_Stack
 ---@field push          fun(self:_Stack, val:any):integer
 ---@field pop           fun(self:_Stack):any
----@field len           fun(self:_Stack):integer
+---@field empty         fun(self:_Stack):nil
+---@field __len         fun(self:_Stack):integer
+---@field __tostring    fun(self:_Stack):string
+local stack_meta -- forward declaration
 
---- Circular Queue
----@class _CircularQueue: _ABCQueue
----@field size          integer
----@field data          table
----@field push          fun(self:_CircularQueue, val:any):integer
----@field pop           fun(self:_CircularQueue):any
+--------------------------------------------------------------------------------
+-- Constructors
+--------------------------------------------------------------------------------
 
+---Creates a new Queue
+---@return _Queue
+local function new_queue()
+    local o = { first = 1, last = 0 }
+    return setmetatable(o, queue_meta)
+end
+
+---Creates a new Deque (Double Ended Queue)
+---@return _Deque
+local function new_deque()
+    local o = { first = 1, last = 0 }
+    return setmetatable(o, deque_meta)
+end
+
+--- Creates a new Stack
+---@return _Stack
+local function new_stack()
+    local o = { first = 1, last = 0 }
+    return setmetatable(o, stack_meta)
+end
+
+--------------------------------------------------------------------------------
+-- Shared Metamethods
+--------------------------------------------------------------------------------
 
 ---Push an element onto the front of a queue (unshift)
 ---@param self _ABCQueue
 ---@param val any
 local function push_front(self, val)
     self.first = self.first - 1
-    self.data[self.first] = val
+    self[self.first] = val
 end
 
 ---Push an element onto the back of a queue (push)
@@ -94,7 +131,7 @@ end
 ---@param val any
 local function push_back(self, val)
     self.last = self.last + 1
-    self.data[self.last] = val
+    self[self.last] = val
 end
 
 ---Pop an element from the front of a queue (shift)
@@ -104,8 +141,8 @@ local function pop_front(self)
     if self.first > self.last then
         return nil
     end
-    local val = self.data[self.first]
-    self.data[self.first] = nil
+    local val = self[self.first]
+    self[self.first] = nil
     self.first = self.first + 1
     return val
 end
@@ -117,19 +154,21 @@ local function pop_back(self)
     if self.first > self.last then
         return nil
     end
-    local val = self.data[self.last]
-    self.data[self.last] = nil
+    local val = self[self.last]
+    self[self.last] = nil
     self.last = self.last - 1
     return val
 end
 
 ---Empty the queue
----@param self any
+---@param self _ABCQueue
 ---@return nil
 local function empty(self)
+    for i = self.first, self.last do
+        self[i] = nil
+    end
     self.first = 1
     self.last = 0
-    self.data = {}
 end
 
 --- Returns the number of elements in the datastructure
@@ -139,98 +178,57 @@ local function len(self)
     return self.last - self.first + 1
 end
 
---- Returns the number of non-nil elements in the datastructure
+---Returns a string representation of the queue
 ---@param self _ABCQueue
----@return integer number of non-nil elements in the datastructure
-local function len_circular(self)
-    return #self.data
+local function tostring(self)
+    local tbl = {}
+    for i = self.first, self.last do
+        tbl[#tbl + 1] = tostring(self[i])
+    end
+    return "{" .. table.concat(tbl, ", ") .. "}"
 end
 
---- Push a value into the Circular Buffer
----@param self _CircularQueue
----@param val any
----@return integer idx The index of the pushed value
-local function circular_push(self, val)
-    local idx = self.last
-    self.data[idx] = val
-    self.last = (idx % self.size) + 1
-    return idx
-end
+queue_meta = {
+    new = new_queue,
+    enqueue = push_back,
+    dequeue = pop_front,
+    empty = empty,
+    __len = len,
+    __tostring = tostring,
+}
+queue_meta.__index = queue_meta
 
---- Pop a value from the Circular Buffer
----@param self _CircularQueue
----@return any? val The popped (nil if empty)
-local function circular_pop(self)
-    local idx = self.first
-    local val = self.data[idx]
-    self.data[idx] = nil
-    self.first = (idx % self.size) + 1
-    return val
-end
+deque_meta = {
+    new = new_deque,
+    push_front = push_front,
+    push_back = push_back,
+    pop_front = pop_front,
+    pop_back = pop_back,
+    empty = empty,
+    __len = len,
+    __tostring = tostring,
+}
+deque_meta.__index = deque_meta
 
----Creates a new Queue
----@return _Queue
-local function new_queue()
-    return {
-        first = 1,
-        last = 0,
-        data = {},
-        insert = push_back,
-        delete = pop_front,
-        empty = empty,
-        len = len,
-    }
-end
+stack_meta = {
+    new = new_stack,
+    push = push_back,
+    pop = pop_back,
+    empty = empty,
+    __len = len,
+    __tostring = tostring,
+}
+stack_meta.__index = stack_meta
 
----Creates a new Deque (Double Ended Queue)
----@return _Deque
-local function new_deque()
-    return {
-        first = 1,
-        last = 0,
-        data = {},
-        push_front = push_front,
-        push_back = push_back,
-        pop_front = pop_front,
-        pop_back = pop_back,
-        empty = empty,
-        len = len,
-    }
+if playdate then
+    crunk = crunk or {}
+    crunk.ds = crunk.ds or {}
+    crunk.ds.queue = queue_meta
+    crunk.ds.deque = deque_meta
+    crunk.ds.stack = stack_meta
 end
-
---- Creates a new Stack
----@return _Stack
-local function new_stack()
-    return {
-        first = 1,
-        last = 0,
-        data = {},
-        push = push_back,
-        pop = pop_back,
-        empty = empty,
-        len = len,
-    }
-end
-
---- Creae a new Circular buffer
----@param size integer How many entries in the table
----@return _CircularQueue
-local function new_circular(size)
-    return {
-        size = size,
-        first = 1,
-        last = 1,
-        data = {},
-        -- data = table.create(size, 0),
-        push = circular_push,
-        pop = circular_pop,
-        len = len_circular,
-    }
-end
-
-crunk = crunk or {}
-crunk.ds = crunk.ds or {}
-crunk.ds.queue = new_queue
-crunk.ds.deque = new_deque
-crunk.ds.stack = new_stack
-crunk.ds.circular = new_circular
+return {
+    queue = queue_meta,
+    deque = deque_meta,
+    stack = stack_meta,
+}

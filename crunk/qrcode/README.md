@@ -54,6 +54,22 @@ image:drawScaled(20, 20, 4, 4)
 3. See [`library/stub.lua`](https://github/notpeter/crunk/library/stub.lua)
 for documentation of all optional function parameters.
 
+### Type Hints
+
+To get LuaCATS type hints for functions with C implementations
+(e.g. `crunk.qrcode`) just create a `library` subdirectory in your
+project and drop [`library/stub.lua`](library/stub.lua) inside it.
+
+Then add a `.luarc.json` in your project containing:
+```json
+{ "workspace.library": [ "library/" ] }
+```
+
+Or do the same via `.vscode/settings.json`
+```json
+{ "Lua.workspace.library": [ "library/" ] }
+```
+
 ## Giving Thanks
 
 If you find this software useful, please consider:

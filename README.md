@@ -1,20 +1,24 @@
-# Crunk: Extra Libs for Playdate
+# Crunk: Missing Libs for Lua and Playdate
 
 ## Introduction
 
 Crunk is a collection of open source Lua and C snippets and
-libraries to assist in Playdate app development.
-It is designed to be simple and modular.
+libraries to assist in Lua app/game development for Playdate.
 
-Just take the Lua and/or C files, drop them into your
-project and away you go. If you only need one function
-just copy/paste and away you go
-(but don't forget to retain the Copyright and License).
+The code is designed to be simple, modular and permissively licensed.
+This means you if you want a `Set` data structure you can
+just copy [`set.lua`](crunk/ds/set.lua) into your project,
+`import "set.lua"` (PlayDate Lua) or `Set = require "set.lua"` (Lua)
+and away you go.
+
+Where possibel, each Lua file stands alone. In order to support both
+PUC-Lua and Playdate-Lua our Lua files support both
+`require` and `import` mechanisms but use neither themselves.
 
 ## Components:
 
 Mixed C/Lua:
-- [crunk/qrcode](crunk/qrcode) - Fast QR Code generation
+- [crunk/qrcode](crunk/qrcode) - Fast QR Code generation (70x faster than PlayDate SDK)
     - `crunk.qrcode.generate(text)`
     - `crunk.qrcode.generate(text, ecc_level, mask, min_version, max_version)`
 
@@ -27,23 +31,14 @@ Pure Lua:
     - `crunk.ds.queue` - Queue
     - `crunk.ds.deque` - Deque (Double Ended Queue)
     - `crunk.ds.stack` - Stack
-    - `crunk.ds.circular` - Circular Queue
 - [crunk/ds/set](crunk/ds/set) - Simple set data structure for Lua
     - `crunk.ds.set` -
 
 Pure C:
-- [crunk/pixel](crunk/pd_pixel/pd_pixel.h) -
+- [crunk/pd_pixel](crunk/pd_pixel/pd_pixel.h) -
 C macros for working with individual Playdate LCDImage pixels.
-- [crunk/print](crunk/print) -
+- [crunk/pd_print](crunk/pd_print) -
 C macros for printing and logging to console (pd_print, pd_error, pd_debug)
-
-## Giving Thanks
-
-If you find this software useful, please consider:
-
-1. [Sponsoring me on GitHub](https://github.com/sponsors/notpeter/)
-2. [Purchasing something from my Itch Store](https://notpeter.itch.io)
-3. Sending me free copies of your Playdate apps using Crunk.
 
 ## Types
 
@@ -54,19 +49,13 @@ and static analysis.
 Please configure [playdate-luacats](https://github.com/notpeter/playdate-luacats)
 for the best experience with this.
 
-To get LuaCATS type hints for functions with C implementations
-(e.g. `crunk.qrcode`) just create a `library` subdirectory in your
-project and drop [`library/stub.lua`](library/stub.lua) inside it.
+## Giving Thanks
 
-Then add a `.luarc.json` in your project containing:
-```json
-{ "workspace.library": [ "library/" ] }
-```
+If you find this software useful, please consider:
 
-Or do the same via `.vscode/settings.json`
-```json
-{ "Lua.workspace.library": [ "library/" ] }
-```
+1. [Sponsoring me on GitHub](https://github.com/sponsors/notpeter/)
+2. [Purchasing something from my Itch Store](https://notpeter.itch.io)
+3. Sending me free copies of your Playdate apps using Crunk.
 
 ## License
 

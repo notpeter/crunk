@@ -3,6 +3,29 @@
 --
 -- Simple sets in pure Lua for the Playdate modeled after Python's set
 
+---@class _Set: table<any, boolean>
+---@field new                   fun(tbl?:table<any, any>):_Set
+---@field union                 fun(a:_Set, b:_Set):_Set
+---@field intersection          fun(a:_Set, b:_Set):_Set
+---@field difference            fun(a:_Set, b:_Set):_Set
+---@field symmetric_difference  fun(a:_Set, b:_Set):_Set
+---@field issubset              fun(a:_Set, b:_Set):boolean
+---@field issuperset            fun(a:_Set, b:_Set):boolean
+---@field isdisjoint            fun(a:_Set, b:_Set):boolean
+---@field intersection_update   fun(a:_Set, b:_Set):nil
+---@field difference_update     fun(a:_Set, b:_Set):nil
+---@field union_update          fun(a:_Set, b:_Set):nil
+---@field pop                   fun(a:_Set):any?
+---@field push                  fun(a:_Set, e:any):nil
+---@field clear                 fun(a:_Set):nil
+---@field copy                  fun(a:_Set):_Set
+---@field __add                 fun(a:_Set, b:_Set):_Set
+---@field __sub                 fun(a:_Set, b:_Set):_Set
+---@field __eq                  fun(a:_Set, b:_Set):boolean
+---@field __band                fun(a:_Set, b:_Set):_Set
+---@field __bor                 fun(a:_Set, b:_Set):_Set
+---@field __bxor                fun(a:_Set, b:_Set):_Set
+---@field __tostring            fun(a:_Set):string
 local set_meta -- forward declaration
 
 ---Create a new set
@@ -235,6 +258,9 @@ set_meta = {
 }
 set_meta.__index = set_meta
 
-crunk = crunk or {}
-crunk.ds = crunk.ds or {}
-crunk.ds.set = set_meta
+if playdate then
+    crunk = crunk or {}
+    crunk.ds = crunk.ds or {}
+    crunk.ds.set = set_meta
+end
+return set_meta

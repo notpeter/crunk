@@ -99,8 +99,15 @@ local function image_blocks(img)
     return table.concat(out, "\n")
 end
 
-crunk = crunk or {}
-crunk.image = crunk.image or {}
-crunk.image.format_ascii = image_ascii
-crunk.image.format_color = image_color
-crunk.image.format_blocks = image_blocks
+if playdate then
+    crunk = crunk or {}
+    crunk.image = crunk.image or {}
+    crunk.image.format_ascii = image_ascii
+    crunk.image.format_color = image_color
+    crunk.image.format_blocks = image_blocks
+end
+return {
+    ascii = image_ascii,
+    color = image_color,
+    blocks = image_blocks,
+}

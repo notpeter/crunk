@@ -20,17 +20,10 @@ and various operators: `+`, `-`, `==`, `&`, `|`, `~`)
 
 Copy the file you need into your project, import and use:
 
-
-If you only need one of the datastructures,
-you can easily delete everything you don't need or just
-paste what you need into your own project.
-Please remember to preserve the copyright notice and license.
-
-Example usage:
 ```lua
 import "queue"
 
-q = crunk.ds.deque()
+q = crunk.ds.deque.new()
 q:push_front("A")
 q:push_front("B")
 q:push_back("C")
@@ -46,50 +39,40 @@ while q:len() > 0 do
 end
 ```
 
+(Don't forget to preserve the copyright notice and license)
+
 ## Why?
 
 I created these datastructures because I needed them.  Lua
 doesn't include them out of the box because they can be easily
 implemented on top of Lua tables so this is what I did.
 
-I chose to implement these structures without metatables as
-an academic exercise.  I find that novice Lua programmers are
-very likely to be confused `__index` and `setmetatable()`.
+## Types
 
-When teaching / learning Lua which of these would you prefer:
+These files include
+[LuaCATS (**L**ua **C**omments **A**nd **T**ype **S**ystem) types](https://luals.github.io/wiki/annotations/)
+as comments.  If you are using the [sumneko.lua](https://marketplace.visualstudio.com/items?itemName=sumneko.lua)
+VSCode extension or [NeoVim with LuaLS](https://luals.github.io/#neovim-install)
+you will get type-checking and autocomplete suggestions.
 
-```lua
-local stack_mt = {}
-stack_mt.__index = stack_mt
-function new_stack()
-    return setmetatable({
-        first = 1,
-        last = 0,
-        data = {},
-        push = push_back,
-        pop = pop_back,
-        empty = empty,
-        len = len,
-    }, stack_mt)
-end
-```
+We provide the following types: `_Queue`, `_Deque`, `_Stack` and `_Set`.
+
+These are implemented generically such that the values in each can be of any Lua type (`any`).
+You can also extend these to support more strictly typed datastructures. For example if you know
+your Queue will only be storing strings (and want LuaLS to warn/error otherwise) just
+create a new class that inherits from _Queue and replaces all the `any` with `string`.
+
+For example:
 
 ```lua
-function new_stack()
-    return {
-        first = 1,
-        last = 0,
-        data = {},
-        push = push_back,
-        pop = pop_back,
-        empty = empty,
-        len = len,
-    }
-end
-```
+---@class _QueueString: _Queue
+---@field enqueue fun(self:_QueueString, val:string):integer
+---@field dequeue fun(self:_QueueString):string
 
-Speed is effectively identical between the two,
-while the metatable version uses less memory with >2 objects.
+local qs = crunk.ds.queue.new()  ---@type QueueString
+
+qs:enqueue(1) -- Warning: "Lua Diagnostics.(param-type-mismatch)"
+```
 
 ## Giving Thanks
 
