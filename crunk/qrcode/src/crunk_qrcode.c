@@ -25,9 +25,11 @@ extern PlaydateAPI* pd;
  * @param boostEcl int Boost Error Correction Level (0-1)
  * @return err char* Error message or empty string
  */
-static char* check_new_args(const char* text, int ecl, int mask, int minVersion, int maxVersion, int boostEcl) {
+static char* check_new_args(const char* text, int border, int ecl, int mask, int minVersion, int maxVersion, int boostEcl) {
     if (!text || strcmp(text, "") == 0)
         return "crunk_qrcode: Invalid argument value for text.";
+    if (border < 0)
+        return "crunk_qrcode: Invalid argument value for border.";
     if (ecl < -1 || ecl > 3)
         return "crunk_qrcode: Invalid argument value for ecc_level.";
     if (mask < -1 || mask > 7)
@@ -47,15 +49,15 @@ static char* check_new_args(const char* text, int ecl, int mask, int minVersion,
  */
 int qrq_lua_generate(lua_State* L) {
     int count = pd->lua->getArgCount();
-    int border = 4; // QRCodes require a four module "quiet zone" around the code.
     const char* text= (count < 1 || pd->lua->argIsNil(1)) ? "" : pd->lua->getArgString(1);
-    int ecl         = (count < 2 || pd->lua->argIsNil(2)) ?  3 : pd->lua->getArgInt(2);
-    int mask        = (count < 3 || pd->lua->argIsNil(3)) ? -1 : pd->lua->getArgInt(3);
-    int minVersion  = (count < 4 || pd->lua->argIsNil(4)) ?  1 : pd->lua->getArgInt(4);
-    int maxVersion  = (count < 5 || pd->lua->argIsNil(5)) ? 40 : pd->lua->getArgInt(5);
-    int boostEcl    = (count < 6 || pd->lua->argIsNil(6)) ?  1 : pd->lua->getArgInt(6);
+    int border      = (count < 2 || pd->lua->argIsNil(2)) ?  4 : pd->lua->getArgInt(2); // (default 4
+    int ecl         = (count < 3 || pd->lua->argIsNil(3)) ?  3 : pd->lua->getArgInt(3);
+    int mask        = (count < 4 || pd->lua->argIsNil(4)) ? -1 : pd->lua->getArgInt(4);
+    int minVersion  = (count < 5 || pd->lua->argIsNil(5)) ?  1 : pd->lua->getArgInt(5);
+    int maxVersion  = (count < 6 || pd->lua->argIsNil(6)) ? 40 : pd->lua->getArgInt(6);
+    int boostEcl    = (count < 7 || pd->lua->argIsNil(7)) ?  1 : pd->lua->getArgInt(7);
 
-    char* err = check_new_args(text, ecl, mask, minVersion, maxVersion, boostEcl);
+    char* err = check_new_args(text, border, ecl, mask, minVersion, maxVersion, boostEcl);
     if (strcmp(err, "") != 0) {
         pd->system->logToConsole(err);
         return 0;
