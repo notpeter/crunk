@@ -51,14 +51,14 @@ local image = crunk.qrcode.generate("https://panic.com")`
 image:drawScaled(20, 20, 4, 4)
 ```
 
-3. See [`library/stub.lua`](https://github/notpeter/crunk/library/stub.lua)
+3. See [`library/qrcode.lua`](https://github/notpeter/crunk/tree/main/library/qrcode.lua)
 for documentation of all optional function parameters.
 
 ### Type Hints
 
 To get LuaCATS type hints for functions with C implementations
 (e.g. `crunk.qrcode`) just create a `library` subdirectory in your
-project and drop [`library/stub.lua`](library/stub.lua) inside it.
+project and drop [`library/qrcode.lua`](https://github/notpeter/crunk/tree/main/library/qrcode.lua) inside it.
 
 Then add a `.luarc.json` in your project containing:
 ```json
