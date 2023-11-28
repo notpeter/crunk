@@ -1,5 +1,5 @@
-name=QuickQR
+name=CrunkQR
 author=Peter Tripp
-description=Quick QR Code Generation
-bundleID=net.notpeter.quickqr
+description=CrunkQR - Quick Code Generation
+bundleID=net.notpeter.crunkqr
 imagePath=
