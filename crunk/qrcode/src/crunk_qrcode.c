@@ -63,34 +63,34 @@ int qrq_lua_generate(lua_State* L) {
         return 0;
     }
 
-	/* Ask qrcodegen to generate a QRCode (tempBuffer, outBuffer are static buffers) */
+    /* Ask qrcodegen to generate a QRCode (tempBuffer, outBuffer are static buffers) */
     bool ok = qrcodegen_encodeText(text, tempBuffer, outBuffer, ecl, minVersion, maxVersion, mask, boostEcl);
     if (!ok) {
         pd->system->logToConsole("Failed to encode text into QR code.");
         return 1;
     }
 
-	/* Convert the qrcode buffer to a newly allocated Playdate LCDBitmap */
+    /* Convert the qrcode buffer to a newly allocated Playdate LCDBitmap */
     int width, height, rowbytes;
     uint8_t *data = NULL;
     int size = qrcodegen_getSize(outBuffer); // side length (21x21 to 177x177)
     int image_size = (size + 2 * border >= 32) ? (size + 2 * border) : 32; //min LCDBitmap is 32x32.
     // This allocates a new bitmap. When we return, Lua is responsible for freeing/GC (I think).
-	LCDBitmap* bitmap = pd->graphics->newBitmap(image_size, image_size, kColorWhite);
+    LCDBitmap* bitmap = pd->graphics->newBitmap(image_size, image_size, kColorWhite);
     pd->graphics->getBitmapData(bitmap, &width, &height, &rowbytes, NULL, &data);
-	for (int y = 0; y < size; y++) {
+    for (int y = 0; y < size; y++) {
         for (int x = 0; x < size; x++) {
-			if (qrcodegen_getModule(outBuffer, x, y)) {
-				setpixel(data, x + border, y + border, rowbytes);
-			}
+            if (qrcodegen_getModule(outBuffer, x, y)) {
+                setpixel(data, x + border, y + border, rowbytes);
+            }
         }
     }
-	if (!ok) {
-		pd->system->logToConsole("QRCode generation failed.");
-		return 0;
-	}
-	pd->lua->pushBitmap(bitmap);
-	return 1;
+    if (!ok) {
+        pd->system->logToConsole("QRCode generation failed.");
+        return 0;
+    }
+    pd->lua->pushBitmap(bitmap);
+    return 1;
 }
 
 void crunk_qrcode_register(PlaydateAPI* playdate, const char* name) {
