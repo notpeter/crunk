@@ -6,7 +6,7 @@ crunk/ds/queue.lua: Minimal queue datastructures for in pure Lua.
 license: MIT
 
 These are simple queue data structures atop Lua tables:
-    * Queue (Single Ended Queue) - FIFO queue, growable with no limit on size
+    * Queue (Single Ended Queue) - FIFO queue
     * Deque (Double Ended Queue)
     * Stack - LIFO queue
 

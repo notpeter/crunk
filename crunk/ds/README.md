@@ -88,7 +88,6 @@ If you find this software useful, please consider:
 MIT License
 
 Copyright (c) 2023 Peter Tripp
-Copyright (c) Project Nayuki
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
