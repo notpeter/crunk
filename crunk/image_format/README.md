@@ -4,7 +4,7 @@ Part of [Crunk](https://github.com/notpeter/crunk).
 
 ## crunk.image.format
 
-See [image.lua](image.lua)
+See [crunk_image_format.lua](crunk_image_format.lua)
 
 Take a playdate.graphics.image and convert it to text. Useful for debugging.
 
@@ -21,8 +21,10 @@ text = crunk.image.format_blocks(img)
 ## Usage
 
 Copy `crunk_image_format.lua` into your project and then in your `main.lua` add:
+
 ```lua
 import "crunk_image_format"
+print(crunk.image.format_ascii(img))
 ```
 
 ## Screenshots

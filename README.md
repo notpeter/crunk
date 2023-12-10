@@ -27,12 +27,12 @@ Pure Lua:
     - `crunk.image.format_ascii`
     - `crunk.image.format_color`
     - `crunk.image.format_blocks`
-- [crunk/ds/queue](crunk/ds/queue) - Simple queue-like data structures for Lua
+- [crunk/ds](crunk/ds) - Simple queue-like data structures for Lua
     - `crunk.ds.queue` - Queue
     - `crunk.ds.deque` - Deque (Double Ended Queue)
     - `crunk.ds.stack` - Stack
-- [crunk/ds/set](crunk/ds/set) - Simple set data structure for Lua
-    - `crunk.ds.set` -
+    - `crunk.ds.set` - Set
+- [crunk/math](crunk/math) - Math Helper functions
 
 Pure C:
 - [crunk/pd_pixel](crunk/pd_pixel/pd_pixel.h) -
